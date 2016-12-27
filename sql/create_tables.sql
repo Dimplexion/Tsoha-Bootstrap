@@ -14,10 +14,10 @@ CREATE TABLE Resepti(
 
 CREATE TABLE Ainesosa(
   ID SERIAL PRIMARY KEY,
-  Nimi varchar(120) NOT NULL,
+  Nimi varchar(120) NOT NULL
 );
 
 CREATE TABLE Ainesosaliitos(
   Resepti_ID INTEGER REFERENCES Resepti(ID),
-  Ainesosa_ID INTEGER REFERENCES Ainesosa(ID),
+  Ainesosa_ID INTEGER REFERENCES Ainesosa(ID)
 );
