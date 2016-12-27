@@ -1,7 +1,8 @@
 CREATE TABLE Kayttaja(
   ID SERIAL PRIMARY KEY, 
   Nimi varchar(120) NOT NULL,
-  Salasana varchar(120) NOT NULL
+  Salasana varchar(120) NOT NULL,
+  Yllapitaja boolean DEFAULT FALSE
 );
 
 CREATE TABLE Resepti(
@@ -18,5 +19,5 @@ CREATE TABLE Ainesosa(
 
 CREATE TABLE Ainesosaliitos(
   Resepti_ID INTEGER REFERENCES Resepti(ID),
-  Ainesosa INTEGER REFERENCES Ainesosa(ID),
+  Ainesosa_ID INTEGER REFERENCES Ainesosa(ID),
 );
