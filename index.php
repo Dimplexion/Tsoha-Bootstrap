@@ -1,7 +1,10 @@
 <?php
 
   // Laitetaan virheilmoitukset näkymään
-  error_reporting(E_ALL);
+use Slim\Slim;
+use Zeuxisoo\Whoops\Provider\Slim\WhoopsMiddleware;
+
+error_reporting(E_ALL);
   ini_set('display_errors', '1');
 
   // Selvitetään, missä kansiossa index.php on
@@ -10,7 +13,7 @@
 
   if($explode[1] == 'index.php'){
     $base_folder = '';
-  }else{
+  } else {
     $base_folder = $explode[1];
   }
 
@@ -28,8 +31,8 @@
   // Otetaan Composer käyttöön
   require 'vendor/autoload.php';
 
-  $routes = new \Slim\Slim();
-  $routes->add(new \Zeuxisoo\Whoops\Provider\Slim\WhoopsMiddleware);
+  $routes = new Slim();
+  $routes->add(new WhoopsMiddleware);
 
   $routes->get('/tietokantayhteys', function(){
     DB::test_connection();
