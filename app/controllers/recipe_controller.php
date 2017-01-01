@@ -67,6 +67,6 @@ class RecipeController extends BaseController
 
         $recipe->save();
 
-        Redirect::to('/recipe/show/' . $recipe->id, array('message', "Drinkkireseptiehdots lisätty!"));
+        Redirect::to('/recipe/show/' . $recipe->id, array('message' => "Drinkkireseptiehdots lisätty!"));
     }
 }
