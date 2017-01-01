@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Lisää drinkkireseptiehdotus</h1>
+
+<form method="post" action="{{base_path}}/recipe/add">
+    <div class="form-group">
+        <label>Drinkkireseptin nimi</label>
+        <input type="text"  name="name" class="form-control" value="">
+    </div>
+
+    <div class="form-group">
+        <label>Ainesosa 1</label>
+        <input type="text" name="ingredient1" class="form-control" value="">
+    </div>
+
+    <div class="form-group">
+        <label>Ainesosa 1 määrä (cl)</label>
+        <input type="text" name="ingredient1_amount" class="form-control" value="">
+    </div>
+
+    <div class="form-group">
+        <label>Ainesosa 2</label>
+        <input type="text" name="ingredient2" class="form-control" value="">
+    </div>
+
+    <div class="form-group">
+        <label>Ainesosa 2 määrä (cl)</label>
+        <input type="text" name="ingredient2_amount" class="form-control" value="">
+    </div>
+
+    <!--
+        TODO :: Add "Approved" check box for admins.
+    -->
+    <div class="form-group">
+        <input type="hidden" name="approved" value="false">
+    </div>
+
+    <!--
+        TODO :: Add dynamic amount of ingredients.
+        TODO :: Add description for the drink recipe.
+    -->
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Tallenna</button>
+    </div>
+</form>
+{% endblock %}

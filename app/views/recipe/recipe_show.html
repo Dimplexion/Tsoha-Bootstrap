@@ -4,11 +4,12 @@
 <p>
     <button class="btn btn-danger">Poista</button> <a href="#" class="btn btn-default">Muokkaa</a>
 </p>
-<h1>Rommikola</h1>
+<h1>{{recipe.name}}</h1>
 
 <h2>Ainesosat:</h2>
 <ul>
-    <li><strong>Rommi</strong> 4cl</li>
-    <li><strong>Kola</strong> 10cl</li>
+    {% for ingredient in ingredients %}
+    <li><strong>{{ingredient.name}}</strong> {{ingredient.amount}} cl</li>
+    {% endfor %}
 </ul>
 {% endblock %}

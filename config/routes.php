@@ -1,22 +1,31 @@
 <?php
 
+// Routes for displaying pages.
 $routes->get('/', function() {
-    HelloWorldController::index();
+    PageController::index();
 });
 
 $routes->get('/hiekkalaatikko', function() {
-    HelloWorldController::sandbox();
+    PageController::sandbox();
 });
 
-$routes->get('/resepti_show', function() {
-    HelloWorldController::resepti_show();
+$routes->get('/recipe/list', function() {
+    RecipeController::index_recipe();
 });
 
-$routes->get('/resepti_list', function() {
-    HelloWorldController::resepti_list();
+$routes->get('/recipe/show/:id', function($id) {
+    RecipeController::show_recipe($id);
 });
 
-$routes->get('/resepti_edit', function() {
-    HelloWorldController::resepti_edit();
+$routes->get('/recipe/new', function() {
+    RecipeController::new_recipe();
 });
 
+$routes->get('/recipe/edit', function() {
+    RecipeController::edit_recipe();
+});
+
+// Routes for actions.
+$routes->post('/recipe/add', function() {
+    RecipeController::store_recipe();
+});
