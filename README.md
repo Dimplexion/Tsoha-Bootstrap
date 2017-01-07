@@ -21,4 +21,4 @@ http://advancedkittenry.github.io/suunnittelu_ja_tyoymparisto/aiheet/Drinkkiarki
 # Käyttäjätunnukset
 
 Käyttäjätunnus: "Janne"
-Salasala: "Passu123"
+Salasana: "Passu123"
