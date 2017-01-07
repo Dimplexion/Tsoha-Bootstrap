@@ -2,13 +2,28 @@
 
   class PageController extends BaseController{
 
-    public static function index(){
+    public static function index()
+    {
+        /// TODO :: Should have a separate function for checking if user has logged in without the redirecting.
+        if(BaseController::get_user_logged_in() != null)
+        {
+            Redirect::to('/recipe/list');
+        }
+        else
+        {
          View::make('index.html');
+        }
     }
 
     public static function sandbox(){
-      // Testaa koodiasi täällä
-      View::Make('helloworld.html');
+        $drink = new DrinkRecipe(array(
+            'name' => 'a',
+            'owner_id' => 1,
+            'approved' => 1
+        ));
+        $errors = $drink->errors();
+
+        Kint::dump($errors);
     }
 
   }

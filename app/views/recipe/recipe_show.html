@@ -1,8 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% import "macros/forms.html" as forms %}
+
 <p>
-    <button class="btn btn-danger">Poista</button> <a href="#" class="btn btn-default">Muokkaa</a>
+    {% if message is not empty %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endif %}
+</p>
+
+<a href="{{base_path}}/recipe/list">Takaisin reseptilistaukseen</a>
+
+<p>
+    {{forms.destroy_button("#{base_path}/recipe/destroy/#{recipe.id}")}}
+    <a href="{{base_path}}/recipe/edit/{{recipe.id}}" class="btn btn-default">Muokkaa</a>
 </p>
 <h1>{{recipe.name}}</h1>
 
@@ -12,11 +25,5 @@
     <li><strong>{{ingredient.name}}</strong> {{ingredient.amount}} cl</li>
     {% endfor %}
 </ul>
-
-{% if message is not empty %}
-<div class="alert alert-success">
-    {{message}}
-</div>
-{% endif %}
 
 {% endblock %}

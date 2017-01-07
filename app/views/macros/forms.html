@@ -1,0 +1,13 @@
+{% macro show_message(message) %}
+	{% if message is not empty %}
+	<div class="alert alert-success">
+		{{message}}
+	</div>
+	{% endif %}
+{% endmacro %}
+
+{% macro destroy_button(action, text) %}
+  <form method="post" action="{{action}}" style="display: inline-block;">
+    <button type="submit" class="btn btn-danger">{{text|default('Poista')}}</button>
+  </form>
+{% endmacro %}

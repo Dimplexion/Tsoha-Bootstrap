@@ -17,3 +17,8 @@ http://advancedkittenry.github.io/suunnittelu_ja_tyoymparisto/aiheet/Drinkkiarki
 * [Resepti lista](http://jvvuorel.users.cs.helsinki.fi/tsoha/recipe/list)
 * [Reseptin esittely](http://jvvuorel.users.cs.helsinki.fi/tsoha/recipe/show/1)
 * [Reseptin muokkaus](http://jvvuorel.users.cs.helsinki.fi/tsoha/recipe/edit)
+
+# Käyttäjätunnukset
+
+Käyttäjätunnus: "Janne"
+Salasala: "Passu123"
