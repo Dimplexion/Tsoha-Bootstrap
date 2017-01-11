@@ -38,10 +38,24 @@
 
         <div class="collapse navbar-collapse" id="navigation">
           <ul class="nav navbar-nav">
-            <!-- Navigaation linkit -->
-            <li><a href="{{base_path}}/recipe/new">Lisää drinkkireseptiehdotus</a></li>
+              <!-- Navigaation linkit -->
+              {% if user_logged_in %}
+                <li><a href="{{base_path}}/recipe/new">Lisää drinkkireseptiehdotus</a></li>
+
+                <form class="navbar-form navbar-right" method="post" action="{{base_path}}/user/logout">
+                    <button type="submit" class="btn btn-default">Kirjaudu ulos</button>
+                </form>
+              {% else %}
+                  <ul class="nav navbar-nav navbar-right">
+                      <li><a href="{{base_path}}/user/register">Rekisteröidy</a></li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+                      <li><a href="{{base_path}}/user/login">Kirjaudu sisään</a></li>
+                  </ul>
+              {% endif %}
           </ul>
         </div>
+
       </div>
     </nav>
 

@@ -2,7 +2,7 @@
 
 class RecipeController extends BaseController
 {
-    public static function index_recipe()
+    public static function index()
     {
         self::check_logged_in();
 
@@ -15,7 +15,7 @@ class RecipeController extends BaseController
         );
     }
 
-    public static function show_recipe($id)
+    public static function show($id)
     {
         self::check_logged_in();
 
@@ -35,22 +35,21 @@ class RecipeController extends BaseController
                     ));
     }
 
-    public static function new_recipe()
+    public static function create()
     {
         self::check_logged_in();
 
         View::Make('recipe/recipe_new.html');
     }
 
-    public static function edit_recipe($id)
+    public static function edit($id)
     {
         self::check_logged_in();
 
-        $recipe = DrinkRecipe::find($id);
-        View::Make('recipe/recipe_edit.html', array('attributes' => $recipe));
+        View::Make('recipe/recipe_edit.html', array('attributes' => DrinkRecipe::find($id)));
     }
 
-    public static function update_recipe($id)
+    public static function update($id)
     {
         self::check_logged_in();
 
@@ -80,11 +79,11 @@ class RecipeController extends BaseController
         }
         else
         {
-            View::make('recipe/edit', array('errors' => $errors, 'attributes' => $attributes));
+            Redirect::to('/recipe/edit/' . $id, array('errors' => $errors, 'attributes' => $attributes));
         }
     }
 
-    public static function store_recipe()
+    public static function store()
     {
         self::check_logged_in();
 
@@ -129,10 +128,9 @@ class RecipeController extends BaseController
         {
             Redirect::to('/recipe/new', array('errors' => $errors, 'attributes' => $params));
         }
-
     }
 
-    public static function destroy_recipe($id)
+    public static function destroy($id)
     {
         self::check_logged_in();
 

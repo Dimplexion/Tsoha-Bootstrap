@@ -121,7 +121,8 @@ class DrinkRecipe extends BaseModel
         return $recipes;
     }
 
-    public function validate_name(){
+    public function validate_name()
+    {
         $errors = array();
         if($this->name === '' || $this->name === null)
         {

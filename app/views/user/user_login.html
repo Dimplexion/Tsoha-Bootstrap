@@ -5,7 +5,17 @@
     Kirjaudu sisään
 </h1>
 
-<form method="post" action="{{base_path}}/login">
+<p>
+    {% if errors is not empty %}
+    <div class="alert alert-danger">
+        {% for error in errors%}
+        {{error}}
+        {% endfor %}
+    </div>
+{% endif %}
+</p>
+
+<form method="post" action="{{base_path}}/user/login">
     <div class="form-group">
         <label>Käyttäjätunnus</label>
         <input type="text" class="form-control" name="username" value="{{username}}">
@@ -17,14 +27,6 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Kirjaudu sisään</button>
-
-    <div class="form-group">
-    {% if error is not empty %}
-        <div class="alert alert-danger">
-            {{error}}
-        </div>
-    {% endif %}
-    </div>
 </form>
 
 {% endblock %}

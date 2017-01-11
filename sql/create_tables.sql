@@ -9,7 +9,7 @@ CREATE TABLE Ainesosaliitos(
 
 CREATE TABLE UserAccount(
   ID SERIAL PRIMARY KEY,
-  Name varchar(120) NOT NULL,
+  Username varchar(120) NOT NULL,
   Password varchar(120) NOT NULL,
   Admin boolean DEFAULT FALSE
 );

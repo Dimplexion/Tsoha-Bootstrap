@@ -13,10 +13,19 @@
         return null;
     }
 
-    public static function check_logged_in(){
+    public static function check_logged_in($should_redirect=true){
         if(self::get_user_logged_in() == null)
         {
-            Redirect::to('/login');
+            if($should_redirect === true)
+            {
+                Redirect::to('/user/login');
+            }
+            else
+            {
+                return false;
+            }
         }
+
+        return true;
     }
   }

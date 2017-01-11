@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% import "macros/forms.html" as forms %}
+
+<p>
+    {% if message is not empty %}
+    <div class="alert alert-success">
+        {{message}}
+    </div>
+{% endif %}
+</p>
+
+<p>
+    <!-- Deleting a user doesn't work yet -->
+    {{forms.destroy_button("#{base_path}/user/destroy/#{recipe.id}")}}
+    <!-- Only show the editing feature for an admin -->
+    <!--a href="{{base_path}}/user/edit/{{user.id}}" class="btn btn-default">Muokkaa</a-->
+</p>
+<h1>{{user.username}}</h1>
+
+<h2>Käyttöoikeudet: {{% if user.admin}} Ylläpitäjä {{% else %}} Käyttäjä {{% endif %}}</h2>
+
+{% endblock %}
