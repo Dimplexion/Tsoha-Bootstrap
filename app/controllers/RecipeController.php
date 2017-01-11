@@ -87,6 +87,8 @@ class RecipeController extends BaseController
     {
         self::check_logged_in();
 
+        $logged_user = self::get_user_logged_in();
+
         // TODO :: Check here if the user has rights to approve the recipe himself.
         $params = $_POST;
 
@@ -111,7 +113,7 @@ class RecipeController extends BaseController
         //          Currently defaults to first user.
         $recipe = new DrinkRecipe(array(
             'name' => $params['name'],
-            'owner_id' => 1,
+            'owner_id' => $logged_user->id,
             'approved' => $params['approved']
         ));
 

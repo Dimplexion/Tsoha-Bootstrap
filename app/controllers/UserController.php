@@ -46,7 +46,7 @@ class UserController extends BaseController {
         $user = User::authenticate($params['username'], $params['password']);
 
         if(!$user){
-            Redirect::to('/login', array('error' => 'Väärä käyttäjätunnus tai salasana!', 'username' => $params['username']));
+            Redirect::to('/user/login', array('errors' => array('Väärä käyttäjätunnus tai salasana!'), 'username' => $params['username']));
         }else{
             $_SESSION['user'] = $user->id;
 
