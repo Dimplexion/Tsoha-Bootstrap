@@ -26,7 +26,7 @@ class UserController extends BaseController {
         if(count($errors) == 0)
         {
             $user->save();
-            Redirect::to('/user/show/' . $user->id, array('message' => "Käyttäjä rekisteröity!"));
+            Redirect::to('/user/login', array('message' => "Käyttäjä rekisteröity!"));
         }
         else
         {
