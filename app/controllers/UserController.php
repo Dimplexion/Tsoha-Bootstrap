@@ -7,12 +7,9 @@ class UserController extends BaseController {
         View::Make('user/user_register.html');
     }
 
-    static public function edit($id)
+    static public function show($id)
     {
-        /// TODO :: Also check if the user is admin (only admins are allowed to see user information).
-        self::check_logged_in();
-
-        View::Make('recipe/user_edit.html', array('user' => User::find($id)));
+        View::Make('user/user_show.html', array('user' => User::find($id)));
     }
 
     static public function store()

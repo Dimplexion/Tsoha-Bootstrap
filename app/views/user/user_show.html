@@ -8,7 +8,7 @@
     <div class="alert alert-success">
         {{message}}
     </div>
-{% endif %}
+    {% endif %}
 </p>
 
 <p>
@@ -19,6 +19,6 @@
 </p>
 <h1>{{user.username}}</h1>
 
-<h2>Käyttöoikeudet: {{% if user.admin}} Ylläpitäjä {{% else %}} Käyttäjä {{% endif %}}</h2>
+<h2>Käyttöoikeudet: Ylläpitäjä</h2>
 
 {% endblock %}

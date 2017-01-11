@@ -53,7 +53,7 @@ class User extends BaseModel
 
     public function save()
     {
-        $query = DB::connection()->prepare('INSERT INTO UserAccount (Name, password, admin) VALUES (:username, :password, :admin) RETURNING id');
+        $query = DB::connection()->prepare('INSERT INTO UserAccount (Username, password, admin) VALUES (:username, :password, :admin) RETURNING id');
         $query->execute(array(
             'username' => $this->username,
             'password' => $this->password,
@@ -68,7 +68,7 @@ class User extends BaseModel
     {
         /// TODO :: Implement hashing the password.
 
-        $query = DB::connection()->prepare('SELECT * FROM UserAccount WHERE name = :username AND password = :password LIMIT 1');
+        $query = DB::connection()->prepare('SELECT * FROM UserAccount WHERE Username = :username AND password = :password LIMIT 1');
         $query->execute(array('username' => $username,
             'password' => $password));
         $row = $query->fetch();

@@ -35,7 +35,7 @@ $routes->get('/user/login', function() {
 });
 
 $routes->get('/user/show/:id', function($id) {
-    UserController::edit($id);
+    UserController::show($id);
 });
 
 // Routes for actions.
