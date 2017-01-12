@@ -1,6 +1,17 @@
 <?php
 
-  class BaseController{
+class BaseController{
+
+    public static function is_user_admin()
+    {
+        if(isset($_SESSION['user'])){
+            $user = User::find($_SESSION['user']);
+
+            return $user->admin == 1;
+        }
+
+        return false;
+    }
 
     public static function get_user_logged_in(){
 
@@ -24,6 +35,16 @@
             {
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    public static function check_admin()
+    {
+        if(!self::is_user_admin())
+        {
+            Redirect::to('/');
         }
 
         return true;

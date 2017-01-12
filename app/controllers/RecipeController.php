@@ -10,6 +10,7 @@ class RecipeController extends BaseController
         $recipes = DrinkRecipe::all_approved();
         View::make('recipe/recipe_list.html', array(
             'user_logged_in' => self::get_user_logged_in(),
+            'is_user_admin' => self::is_user_admin(),
             'recipes' => $recipes,
             'suggestions' => $recipe_suggestions)
         );
@@ -20,12 +21,7 @@ class RecipeController extends BaseController
         self::check_logged_in();
 
         $recipe = DrinkRecipe::find($id);
-
-        // TODO :: Add getting ingredients from the database.
-        $ingredients = array(array(
-            'name' => 'Rommi (test)',
-            'amount' => 4
-        ));
+        $ingredients = Ingredient::find_by_recipe_id($recipe->id);
 
         View::Make('recipe/recipe_show.html',
                     array(
@@ -46,7 +42,10 @@ class RecipeController extends BaseController
     {
         self::check_logged_in();
 
-        View::Make('recipe/recipe_edit.html', array('attributes' => DrinkRecipe::find($id)));
+        View::Make('recipe/recipe_edit.html', array(
+            'is_user_admin' => self::is_user_admin(),
+            'recipe' => DrinkRecipe::find($id))
+        );
     }
 
     public static function update($id)
@@ -128,7 +127,7 @@ class RecipeController extends BaseController
         }
         else
         {
-            Redirect::to('/recipe/new', array('errors' => $errors, 'attributes' => $params));
+            Redirect::to('/recipe/new', array('errors' => $errors, 'recipe' => $params));
         }
     }
 
@@ -139,6 +138,6 @@ class RecipeController extends BaseController
         $recipe = new DrinkRecipe(array('id' => $id));
         $recipe->destroy();
 
-        Redirect::to('/recipe/list', array('message' => 'Peli on poistettu onnistuneesti!'));
+        Redirect::to('/recipe/list', array('message' => 'Drinkkiresepti on poistettu onnistuneesti!'));
     }
 }

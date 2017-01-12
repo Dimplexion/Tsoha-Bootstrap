@@ -25,3 +25,10 @@ CREATE TABLE Ingredient(
   ID SERIAL PRIMARY KEY,
   Name varchar(120) NOT NULL
 );
+
+CREATE TABLE DrinkRecipeIngredientComb(
+  ID SERIAL PRIMARY KEY,
+  Recipe INTEGER REFERENCES DrinkRecipe(ID),
+  Ingredient INTEGER REFERENCES Ingredient(ID),
+  Amount INTEGER NOT NULL -- Maybe should be moved?
+);

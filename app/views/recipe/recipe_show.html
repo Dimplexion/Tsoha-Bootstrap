@@ -17,12 +17,13 @@
     {{forms.destroy_button("#{base_path}/recipe/destroy/#{recipe.id}")}}
     <a href="{{base_path}}/recipe/edit/{{recipe.id}}" class="btn btn-default">Muokkaa</a>
 </p>
+
 <h1>{{recipe.name}}</h1>
 
 <h2>Ainesosat:</h2>
 <ul>
     {% for ingredient in ingredients %}
-    <li><strong>{{ingredient.name}}</strong> {{ingredient.amount}} cl</li>
+        <li><strong>{{ingredient[1].name}}</strong> {{ingredient[0]}} cl</li>
     {% endfor %}
 </ul>
 

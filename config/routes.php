@@ -26,6 +26,10 @@ $routes->get('/recipe/edit/:id', function($id) {
     RecipeController::edit($id);
 });
 
+$routes->get('/user/list', function() {
+    UserController::index();
+});
+
 $routes->get('/user/register', function() {
     UserController::register();
 });

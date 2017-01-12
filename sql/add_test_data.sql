@@ -6,5 +6,5 @@ INSERT INTO Ingredient (Name) VALUES ('Kola');
 
 INSERT INTO DrinkRecipe (Name, Approved) VALUES ('Rommikola', TRUE);
 
---INSERT INTO Ainesosaliitos (Resepti_ID, Ainesosa_ID) VALUES (1,1);
---INSERT INTO Ainesosaliitos (Resepti_ID, Ainesosa_ID) VALUES (1,2);
+INSERT INTO DrinkRecipeIngredientComb (Recipe, Ingredient, Amount) VALUES (1,1,4);
+INSERT INTO DrinkRecipeIngredientComb (Recipe, Ingredient, Amount ) VALUES (1,2,12);

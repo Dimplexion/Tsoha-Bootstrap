@@ -34,8 +34,9 @@ class DrinkRecipe extends BaseModel
 
     public static function all_approved_for_user()
     {
-        $args = array();
         $user = BaseController::get_user_logged_in();
+
+        $args = array();
         if($user)
         {
             $args = array('owner_id' => $user->id);

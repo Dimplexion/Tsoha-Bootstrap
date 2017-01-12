@@ -2,6 +2,18 @@
 
 class UserController extends BaseController {
 
+    public static function index()
+    {
+        self::check_admin();
+
+        $users = User::all();
+        View::make('user/user_list.html', array(
+                'is_user_admin' => self::is_user_admin(),
+                'users' => $users
+            )
+        );
+    }
+
     static public function register()
     {
         View::Make('user/user_register.html');
@@ -9,7 +21,12 @@ class UserController extends BaseController {
 
     static public function show($id)
     {
-        View::Make('user/user_show.html', array('user' => User::find($id)));
+        self::check_admin();
+
+        View::Make('user/user_show.html', array(
+            'is_user_admin' => self::is_user_admin(),
+            'user' => User::find($id))
+        );
     }
 
     static public function store()
@@ -57,6 +74,6 @@ class UserController extends BaseController {
     static public function log_out()
     {
         $_SESSION['user'] = null;
-        Redirect::to('/login', array('message', 'Olet kirjautunut ulos!'));
+        Redirect::to('/', array('message', 'Olet kirjautunut ulos!'));
     }
 }

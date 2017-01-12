@@ -12,13 +12,15 @@
 </p>
 
 <p>
-    <!-- Deleting a user doesn't work yet -->
-    <!-- {{forms.destroy_button("#{base_path}/user/destroy/#{recipe.id}")}} -->
-    <!-- Only show the editing feature for an admin -->
-    <!--a href="{{base_path}}/user/edit/{{user.id}}" class="btn btn-default">Muokkaa</a-->
+    {% if is_user_admin %}
+        <!-- These buttons don't work yet. -->
+        {{forms.destroy_button("#")}}
+        <a href="#" class="btn btn-default">Muokkaa</a>
+    {% endif %}
 </p>
+
 <h1>Käyttäjänimi: {{user.username}}</h1>
 
-<h2>Käyttöoikeudet: Ylläpitäjä</h2>
+<h2>Käyttöoikeudet: {% if user.admin == 1 %} Ylläpitäjä {% else %} Käyttäjä {% endif %}</h2>
 
 {% endblock %}

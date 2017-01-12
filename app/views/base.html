@@ -42,9 +42,14 @@
               {% if user_logged_in %}
                 <li><a href="{{base_path}}/recipe/new">Lisää drinkkireseptiehdotus</a></li>
 
+                {% if is_user_admin %}
+                    <li><a href="{{base_path}}/user/list">Listaa käyttäjät</a></li>
+                {% endif %}
+
                 <form class="navbar-form navbar-right" method="post" action="{{base_path}}/user/logout">
                     <button type="submit" class="btn btn-default">Kirjaudu ulos</button>
                 </form>
+
               {% else %}
                   <ul class="nav navbar-nav navbar-right">
                       <li><a href="{{base_path}}/user/register">Rekisteröidy</a></li>
