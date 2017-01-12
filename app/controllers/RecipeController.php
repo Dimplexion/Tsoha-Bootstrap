@@ -91,39 +91,49 @@ class RecipeController extends BaseController
         // TODO :: Check here if the user has rights to approve the recipe himself.
         $params = $_POST;
 
-        /*
-         * TODO :: Iterate the given ingredients and add them dynamically.
-         * For testing add the two hard coded ingredients.
-         */
-        $ingredients = array(
-            array(
-                'name' => $params['ingredient1'],
-                'amount' => $params['ingredient1_amount']
-            ),
-            array(
-                'name' => $params['ingredient2'],
-                'amount' => $params['ingredient2_amount']
-            )
-        );
-
-        // TODO :: Save the ingredients to database.
-
-        // TODO ::  Set owner_id properly when logging in has been implemented.
-        //          Currently defaults to first user.
         $recipe = new DrinkRecipe(array(
             'name' => $params['name'],
             'owner_id' => $logged_user->id,
             'approved' => $params['approved']
         ));
 
-        // TODO :: Also check errors in ingredients here
+        $recipe->save();
 
         $errors = $recipe->errors();
 
         if(count($errors) == 0)
         {
-            $recipe->save();
-            Redirect::to('/recipe/show/' . $recipe->id, array('message' => "Drinkkireseptiehdotus lisätty!"));
+            // TODO :: Make dynamic.
+            $ingredient1 = new Ingredient(array(
+                'name' => $params['ingredient1']
+            ));
+            $ingredient1->save();
+
+            $ingredient2 = new Ingredient(array(
+                'name' => $params['ingredient2']
+            ));
+            $ingredient2->save();
+
+            $ingredient1_comb = new DrinkRecipeIngredientComb( array(
+                'recipe_id' => $recipe->id,
+                'ingredient_id'=> $ingredient1->id,
+                'amount' => $params['ingredient1_amount']
+            ));
+
+            $ingredient1_comb->save();
+
+            $ingredient2_comb = new DrinkRecipeIngredientComb( array(
+                'recipe_id' => $recipe->id,
+                'ingredient_id'=> $ingredient2->id,
+                'amount' => $params['ingredient2_amount']
+            ));
+
+            $ingredient2_comb->save();
+
+            // TODO :: Also check errors in ingredients here
+
+
+                Redirect::to('/recipe/show/' . $recipe->id, array('message' => "Drinkkireseptiehdotus lisätty!"));
         }
         else
         {

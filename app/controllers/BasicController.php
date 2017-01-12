@@ -2,6 +2,7 @@
 
   class BasicController extends BaseController{
 
+      /// TODO :: Should be moved? Or the class needs to be renamed.
     public static function index()
     {
         /// TODO :: Should have a separate function for checking if user has logged in without the redirecting.
