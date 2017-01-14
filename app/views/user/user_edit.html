@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% import "macros/forms.html" as forms %}
+
+<h1>Muokkaa käyttäjää "{{user.username}}"</h1>
+
+<p>
+    {% if errors is not empty %}
+    <div class="alert alert-danger">
+        {% for error in errors%}
+            {{error}}
+        {% endfor %}
+    </div>
+{% endif %}
+</p>
+
+{{forms.destroy_button("#{base_path}/user/destroy/#{user.id}")}}
+
+<form method="post" action="{{base_path}}/user/edit/{{user.id}}">
+
+    <div class="form-group">
+        <label>Ylläpitäjä</label>
+        <input type="checkbox" name="admin" value="true" {% if user.admin %} checked {% endif %}>
+    </div>
+
+    <div class="form-group">
+        <label>Käyttäjänimi</label>
+        <input type="text" class="form-control" name="username" value="{{user.username}}">
+    </div>
+
+    <div class="form-group">
+        <label>Salasana</label>
+        <input type="text" class="form-control" name="password" value="{{user.password}}">
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Tallenna</button>
+    </div>
+</form>
+{% endblock %}

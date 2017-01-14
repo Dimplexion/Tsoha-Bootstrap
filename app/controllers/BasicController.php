@@ -5,8 +5,7 @@
       /// TODO :: Should be moved? Or the class needs to be renamed.
     public static function index()
     {
-        /// TODO :: Should have a separate function for checking if user has logged in without the redirecting.
-        if(BaseController::get_user_logged_in(false))
+        if(BaseController::check_logged_in(false))
         {
             Redirect::to('/recipe/list');
         }

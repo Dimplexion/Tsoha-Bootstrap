@@ -7,7 +7,7 @@
 
     <title>
       {% block title %}
-        Tietokantasovellus
+        Drinkkiarkisto
       {% endblock %}
     </title>
 
@@ -40,9 +40,10 @@
           <ul class="nav navbar-nav">
               <!-- Navigaation linkit -->
               {% if user_logged_in %}
+                <li><a href="{{base_path}}/recipe/list">Listaa drinkkireseptit</a></li>
                 <li><a href="{{base_path}}/recipe/new">Lisää drinkkireseptiehdotus</a></li>
 
-                {% if is_user_admin %}
+                {% if user_logged_in.admin %}
                     <li><a href="{{base_path}}/user/list">Listaa käyttäjät</a></li>
                 {% endif %}
 

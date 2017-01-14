@@ -9,8 +9,6 @@ class RecipeController extends BaseController
         $recipe_suggestions = DrinkRecipe::all_suggestions_for_user();
         $recipes = DrinkRecipe::all_approved();
         View::make('recipe/recipe_list.html', array(
-            'user_logged_in' => self::get_user_logged_in(),
-            'is_user_admin' => self::is_user_admin(),
             'recipes' => $recipes,
             'suggestions' => $recipe_suggestions)
         );
@@ -21,6 +19,12 @@ class RecipeController extends BaseController
         self::check_logged_in();
 
         $recipe = DrinkRecipe::find($id);
+        /// TODO :: Test if this works.
+        if(!$recipe->approved)
+        {
+            self::check_user_owner_or_admin($recipe);
+        }
+
         $ingredients = Ingredient::find_by_recipe_id($recipe->id);
 
         View::Make('recipe/recipe_show.html',
@@ -42,15 +46,20 @@ class RecipeController extends BaseController
     {
         self::check_logged_in();
 
+        $recipe = DrinkRecipe::find($id);
+        self::check_user_owner_or_admin($recipe);
+
         View::Make('recipe/recipe_edit.html', array(
-            'is_user_admin' => self::is_user_admin(),
-            'recipe' => DrinkRecipe::find($id))
+            'recipe' => $recipe)
         );
     }
 
     public static function update($id)
     {
         self::check_logged_in();
+
+        $recipe = DrinkRecipe::find($id);
+        self::check_user_owner_or_admin($recipe);
 
         $params = $_POST;
 
@@ -64,7 +73,7 @@ class RecipeController extends BaseController
         $attributes = array(
             'id' => $id,
             'name' => $params['name'],
-            'owner_id' => $params['owner_id'],
+            'owner_id' => $recipe->owner_id,
             'approved' => $approved
         );
 
@@ -86,19 +95,23 @@ class RecipeController extends BaseController
     {
         self::check_logged_in();
 
-        $logged_user = self::get_user_logged_in();
-
-        // TODO :: Check here if the user has rights to approve the recipe himself.
+        // TODO :: Test approving without admin rights.
         $params = $_POST;
+
+        $approved = 'false';
+        if($params['approved'] == 'true' &&
+            self::is_user_admin())
+        {
+            $approved = 'true';
+        }
 
         $recipe = new DrinkRecipe(array(
             'name' => $params['name'],
-            'owner_id' => $logged_user->id,
-            'approved' => $params['approved']
+            'owner_id' => self::get_user_logged_in()->id,
+            'approved' => $approved
         ));
 
         $recipe->save();
-
         $errors = $recipe->errors();
 
         if(count($errors) == 0)
@@ -131,9 +144,7 @@ class RecipeController extends BaseController
             $ingredient2_comb->save();
 
             // TODO :: Also check errors in ingredients here
-
-
-                Redirect::to('/recipe/show/' . $recipe->id, array('message' => "Drinkkireseptiehdotus lisätty!"));
+            Redirect::to('/recipe/show/' . $recipe->id, array('message' => "Drinkkireseptiehdotus lisätty!"));
         }
         else
         {
@@ -145,9 +156,21 @@ class RecipeController extends BaseController
     {
         self::check_logged_in();
 
+        $recipe = DrinkRecipe::find($id);
+        self::check_user_owner_or_admin($recipe);
+
         $recipe = new DrinkRecipe(array('id' => $id));
         $recipe->destroy();
 
         Redirect::to('/recipe/list', array('message' => 'Drinkkiresepti on poistettu onnistuneesti!'));
+    }
+
+    public static function check_user_owner_or_admin($recipe)
+    {
+        $user = self::get_user_logged_in();
+        if(!$user || ($user->id !== $recipe->owner_id && !$user->admin))
+        {
+            Redirect::to('/recipe/list', array('errors' => array('Ei oikeuksia katsoa reseptiä.')));
+        }
     }
 }

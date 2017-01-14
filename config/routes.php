@@ -34,6 +34,10 @@ $routes->get('/user/register', function() {
     UserController::register();
 });
 
+$routes->get('/user/edit/:id', function($id) {
+    UserController::edit($id);
+});
+
 $routes->get('/user/login', function() {
     UserController::login();
 });
@@ -58,14 +62,22 @@ $routes->post('/recipe/destroy/:id', function($id) {
     RecipeController::destroy($id);
 });
 
-$routes->post('/user/add', function() {
-    UserController::store();
-});
-
 $routes->post('/user/login', function() {
     UserController::handle_login();
 });
 
 $routes->post('/user/logout', function() {
     UserController::log_out();
+});
+
+$routes->post('/user/add', function() {
+    UserController::store();
+});
+
+$routes->post('/user/edit/:id', function($id) {
+    UserController::update($id);
+});
+
+$routes->post('/user/destroy/:id', function($id) {
+    UserController::destroy($id);
 });

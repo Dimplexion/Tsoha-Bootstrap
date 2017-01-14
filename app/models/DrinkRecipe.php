@@ -7,6 +7,7 @@ class DrinkRecipe extends BaseModel
     public function __construct($attributes)
     {
         parent::__construct($attributes);
+        // TODO :: Validoi myös maksimipituus etc.
         $this->validators = array('validate_name');
     }
 
@@ -98,7 +99,6 @@ class DrinkRecipe extends BaseModel
             'id' => $this->id,
         ));
 
-        /// TODO :: How to check something was actually deleted?
         $query->fetch();
     }
 

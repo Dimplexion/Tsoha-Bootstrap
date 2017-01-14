@@ -44,6 +44,7 @@ class BaseController{
     {
         if(!self::is_user_admin())
         {
+            /// TODO :: Add error message.
             Redirect::to('/');
         }
 

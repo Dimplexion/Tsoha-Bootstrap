@@ -13,10 +13,12 @@
 
 <a href="{{base_path}}/recipe/list">Takaisin reseptilistaukseen</a>
 
-<p>
-    {{forms.destroy_button("#{base_path}/recipe/destroy/#{recipe.id}")}}
-    <a href="{{base_path}}/recipe/edit/{{recipe.id}}" class="btn btn-default">Muokkaa</a>
-</p>
+{% if recipe.owner_id == user_logged_in.id or user_logged_in.admin %}
+    <p>
+        {{forms.destroy_button("#{base_path}/recipe/destroy/#{recipe.id}")}}
+        <a href="{{base_path}}/recipe/edit/{{recipe.id}}" class="btn btn-default">Muokkaa</a>
+    </p>
+{% endif %}
 
 <h1>{{recipe.name}}</h1>
 

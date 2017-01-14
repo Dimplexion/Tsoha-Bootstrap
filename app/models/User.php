@@ -64,6 +64,29 @@ class User extends BaseModel
         $this->id = $row['id'];
     }
 
+    public function update()
+    {
+        $query = DB::connection()->prepare('UPDATE UserAccount SET Username = :username, Password = :password, Admin = :admin WHERE ID = :id RETURNING id');
+        $query->execute(array(
+            'username' => $this->username,
+            'password' => $this->password,
+            'admin' => $this->admin,
+            'id' => $this->id
+        ));
+
+        $query->fetch();
+    }
+
+    public function destroy()
+    {
+        $query = DB::connection()->prepare('DELETE FROM UserAccount WHERE ID = :id');
+        $query->execute(array(
+            'id' => $this->id,
+        ));
+
+        $query->fetch();
+    }
+
     public static function authenticate($username, $password)
     {
         /// TODO :: Implement hashing the password.
@@ -88,29 +111,31 @@ class User extends BaseModel
     }
 
     // Input validation.
-    public function validate_username(){
+    public function validate_username()
+    {
         $errors = array();
         if($this->username === '' || $this->username === null)
         {
             $errors[] = 'Käyttäjänimi ei saa olla tyhjä! ' . $this->username;
         }
-        elseif(!BaseModel::validate_string_length($this->username, 3))
+        elseif(!BaseModel::validate_string_length($this->username, 3, 30))
         {
-            $errors[] = 'Käyttäjänimen pituuden tulee olla vähintään kolme merkkiä pitkä!';
+            $errors[] = 'Käyttäjänimen pituuden tulee olla vähintään kolme ja korkeintaan 30 merkkiä pitkä!';
         }
 
         return $errors;
     }
 
-    public function validate_password(){
+    public function validate_password()
+    {
         $errors = array();
         if($this->password === '' || $this->password === null)
         {
             $errors[] = 'Salasana ei saa olla tyhjä!';
         }
-        elseif(!BaseModel::validate_string_length($this->password, 5))
+        elseif(!BaseModel::validate_string_length($this->password, 5, 120))
         {
-            $errors[] = 'Salasanan pituuden tulee olla vähintään viisi merkkiä pitkä!';
+            $errors[] = 'Salasanan pituuden tulee olla vähintään viisi ja maksimissaan 120 merkkiä pitkä!';
         }
 
         return $errors;

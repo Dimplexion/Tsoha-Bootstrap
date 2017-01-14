@@ -26,9 +26,9 @@
       return $errors;
     }
 
-    public static function validate_string_length($string, $min_length)
+    public static function validate_string_length($string, $min_length, $max_length)
     {
-        return strlen($string) >= $min_length;
+        return strlen($string) >= $min_length && strlen($string) <=$max_length;
     }
 
   }

@@ -12,10 +12,10 @@
 </p>
 
 <p>
-    {% if is_user_admin %}
+    {% if user_logged_in.admin %}
         <!-- These buttons don't work yet. -->
-        {{forms.destroy_button("#")}}
-        <a href="#" class="btn btn-default">Muokkaa</a>
+        {{forms.destroy_button("#{base_path}/user/destroy/#{user.id}")}}
+        <a href="{{base_path}}/user/edit/{{user.id}}" class="btn btn-default">Muokkaa</a>
     {% endif %}
 </p>
 

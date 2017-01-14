@@ -1,11 +1,3 @@
-/*
-CREATE TABLE Ainesosaliitos(
-  Resepti_ID INTEGER REFERENCES Resepti(ID),
-  Ainesosa_ID INTEGER REFERENCES Ainesosa(ID)
-);
-*/
-
--- English table names
 
 CREATE TABLE UserAccount(
   ID SERIAL PRIMARY KEY,
@@ -28,7 +20,7 @@ CREATE TABLE Ingredient(
 
 CREATE TABLE DrinkRecipeIngredientComb(
   ID SERIAL PRIMARY KEY,
-  Recipe INTEGER REFERENCES DrinkRecipe(ID),
-  Ingredient INTEGER REFERENCES Ingredient(ID),
+  Recipe INTEGER REFERENCES DrinkRecipe(ID) ON DELETE CASCADE,
+  Ingredient INTEGER REFERENCES Ingredient(ID) ON DELETE CASCADE,
   Amount INTEGER NOT NULL -- Maybe should be moved?
 );
