@@ -7,7 +7,7 @@ class Ingredient extends BaseModel
     public function __construct($attributes)
     {
         parent::__construct($attributes);
-        //$this->validators = array('validate_name');
+        $this->validators = array('validate_name');
     }
 
     public static function all()
@@ -17,8 +17,7 @@ class Ingredient extends BaseModel
         $rows = $query->fetchAll();
 
         $ingredients = array();
-        foreach($rows as $row)
-        {
+        foreach ($rows as $row) {
             $ingredients[] = new Ingredient(array(
                 'id' => $row['id'],
                 'name' => $row['name'],
@@ -34,8 +33,23 @@ class Ingredient extends BaseModel
         $query->execute(array('id' => $id));
         $row = $query->fetch();
 
-        if(!$row)
-        {
+        if (!$row) {
+            return null;
+        }
+
+        return new Ingredient(array(
+            'id' => $row['id'],
+            'name' => $row['name']
+        ));
+    }
+
+    public static function find_by_name($name)
+    {
+        $query = DB::connection()->prepare('SELECT * FROM Ingredient WHERE Name = :name LIMIT 1');
+        $query->execute(array('name' => $name));
+        $row = $query->fetch();
+
+        if (!$row) {
             return null;
         }
 
@@ -53,13 +67,12 @@ class Ingredient extends BaseModel
         $query->execute(array('recipe_id' => $recipe_id));
         $rows = $query->fetchall();
 
-        if(!$rows)
-        {
+        if (!$rows) {
             return null;
         }
 
         $ingredients = array();
-        foreach( $rows as $row)
+        foreach ($rows as $row)
         {
             $ingredients[] = array(
                 $row['amount'],
@@ -71,11 +84,6 @@ class Ingredient extends BaseModel
         }
 
         return $ingredients;
-    }
-
-    public static function find_by_name($name)
-    {
-        /// TODO :: Implement me!
     }
 
     public function update()
@@ -113,23 +121,20 @@ class Ingredient extends BaseModel
         $query->fetch();
     }
 
-    private static function query_list($query_string, $args = array())
-    {
-        $query = DB::connection()->prepare( $query_string );
-        $query->execute($args);
-        $rows = $query->fetchAll();
+    /*
+     * Validation functions.
+     */
 
-        $recipes = array();
-        foreach($rows as $row)
-        {
-            $recipes[] = new DrinkRecipe(array(
-                'id' => $row['id'],
-                'name' => $row['name'],
-                'owner_id' => $row['owner_id'],
-                'approved' => $row['approved']
-            ));
+    public function validate_name()
+    {
+        $errors = array();
+        if ($this->name === '' || $this->name === null) {
+            $errors[] = 'Ainesosan nimi ei saa olla tyhjä!';
+        }
+        elseif (!BaseModel::validate_string_length($this->name, 1, 30)) {
+            $errors[] = 'Ainesosan nimen pituus saa olla maksimissaan 30 merkkiä!';
         }
 
-        return $recipes;
+        return $errors;
     }
 }

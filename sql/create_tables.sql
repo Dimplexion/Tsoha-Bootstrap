@@ -15,7 +15,7 @@ CREATE TABLE DrinkRecipe(
 
 CREATE TABLE Ingredient(
   ID SERIAL PRIMARY KEY,
-  Name varchar(120) NOT NULL
+  Name varchar(120) NOT NULL UNIQUE
 );
 
 CREATE TABLE DrinkRecipeIngredientComb(

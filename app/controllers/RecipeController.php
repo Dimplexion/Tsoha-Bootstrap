@@ -19,7 +19,7 @@ class RecipeController extends BaseController
         self::check_logged_in();
 
         $recipe = DrinkRecipe::find($id);
-        /// TODO :: Test if this works.
+        /// TODO :: Test that this works.
         if(!$recipe->approved)
         {
             self::check_user_owner_or_admin($recipe);
@@ -39,7 +39,78 @@ class RecipeController extends BaseController
     {
         self::check_logged_in();
 
-        View::Make('recipe/recipe_new.html');
+        // By default add two empty ingredients.
+        $recipe = array('ingredients' => array('',''), 'ingredient_amounts'=> array(null, null));
+        View::Make('recipe/recipe_new.html', array('recipe' => $recipe));
+    }
+
+    public static function store()
+    {
+        self::check_logged_in();
+
+        // TODO :: Test approving without admin rights.
+        $params = $_POST;
+
+        $approved = 'false';
+        if(isset($params['approved']) && $params['approved'] == 'true' && self::is_user_admin())
+        {
+            $approved = 'true';
+        }
+
+        $recipe = new DrinkRecipe(array(
+            'name' => $params['name'],
+            'owner_id' => self::get_user_logged_in()->id,
+            'approved' => $approved
+        ));
+
+        $errors = $recipe->errors();
+        if(count($errors) > 0)
+        {
+            Redirect::to('/recipe/new', array('errors' => $errors, 'recipe' => $params));
+        }
+        $recipe->save();
+
+        $errors = self::add_ingredients($recipe, $params['ingredients'], $params['ingredient_amounts']);
+        if($errors != null)
+        {
+            $recipe->destroy();
+            Redirect::to('/recipe/new', array('errors' => $errors, 'recipe' => $params));
+        }
+
+        Redirect::to('/recipe/show/' . $recipe->id, array('message' => "Drinkkireseptiehdotus lisätty!"));
+    }
+
+    public static function add_ingredients($recipe, $ingredients, $ingredient_amounts)
+    {
+        for($i = 0; $i < count($ingredients); $i++)
+        {
+            $ingredient = new Ingredient(array(
+                'name' => $ingredients[$i]
+            ));
+
+            $errors = $ingredient->errors();
+            if(count($errors) > 0)
+            {
+                return $errors;
+            }
+            $ingredient->save();
+
+            $ingredient_comb = new DrinkRecipeIngredientComb( array(
+                'recipe_id' => $recipe->id,
+                'ingredient_id'=> $ingredient->id,
+                'amount' => $ingredient_amounts[$i]
+            ));
+
+
+            $errors = $ingredient_comb->errors();
+            if(count($errors) > 0)
+            {
+                return $errors;
+            }
+            $ingredient_comb->save();
+        }
+
+        return null;
     }
 
     public static function edit($id)
@@ -49,9 +120,11 @@ class RecipeController extends BaseController
         $recipe = DrinkRecipe::find($id);
         self::check_user_owner_or_admin($recipe);
 
+        $ingredients = Ingredient::find_by_recipe_id($recipe->id);
         View::Make('recipe/recipe_edit.html', array(
-            'recipe' => $recipe)
-        );
+            'recipe' => $recipe,
+            'ingredients' => $ingredients
+        ));
     }
 
     public static function update($id)
@@ -80,6 +153,28 @@ class RecipeController extends BaseController
         $recipe = new DrinkRecipe($attributes);
         $errors = $recipe->errors();
 
+        DrinkRecipeIngredientComb::remove_by_recipe_id($recipe->id);
+
+        foreach($params['ingredients'] as $index=>$ingredient_name)
+        {
+            $ingredient = Ingredient::find_by_name($ingredient_name);
+            if($ingredient === null)
+            {
+                $ingredient = new Ingredient(array('name' => $ingredient_name));
+
+                /// TODO :: Handle errors. (Refactor into separate function?)
+                $ingredient->save();
+            }
+
+            $comb = new DrinkRecipeIngredientComb(array(
+                'recipe_id' => $recipe->id,
+                'ingredient_id' => $ingredient->id,
+                'amount' => $params['ingredient_amounts'][$index]
+            ));
+            /// TODO :: Handle errors.
+            $comb->save();
+        }
+
         if(count($errors) == 0)
         {
             $recipe->update();
@@ -88,67 +183,6 @@ class RecipeController extends BaseController
         else
         {
             Redirect::to('/recipe/edit/' . $id, array('errors' => $errors, 'attributes' => $attributes));
-        }
-    }
-
-    public static function store()
-    {
-        self::check_logged_in();
-
-        // TODO :: Test approving without admin rights.
-        $params = $_POST;
-
-        $approved = 'false';
-        if($params['approved'] == 'true' &&
-            self::is_user_admin())
-        {
-            $approved = 'true';
-        }
-
-        $recipe = new DrinkRecipe(array(
-            'name' => $params['name'],
-            'owner_id' => self::get_user_logged_in()->id,
-            'approved' => $approved
-        ));
-
-        $recipe->save();
-        $errors = $recipe->errors();
-
-        if(count($errors) == 0)
-        {
-            // TODO :: Make dynamic.
-            $ingredient1 = new Ingredient(array(
-                'name' => $params['ingredient1']
-            ));
-            $ingredient1->save();
-
-            $ingredient2 = new Ingredient(array(
-                'name' => $params['ingredient2']
-            ));
-            $ingredient2->save();
-
-            $ingredient1_comb = new DrinkRecipeIngredientComb( array(
-                'recipe_id' => $recipe->id,
-                'ingredient_id'=> $ingredient1->id,
-                'amount' => $params['ingredient1_amount']
-            ));
-
-            $ingredient1_comb->save();
-
-            $ingredient2_comb = new DrinkRecipeIngredientComb( array(
-                'recipe_id' => $recipe->id,
-                'ingredient_id'=> $ingredient2->id,
-                'amount' => $params['ingredient2_amount']
-            ));
-
-            $ingredient2_comb->save();
-
-            // TODO :: Also check errors in ingredients here
-            Redirect::to('/recipe/show/' . $recipe->id, array('message' => "Drinkkireseptiehdotus lisätty!"));
-        }
-        else
-        {
-            Redirect::to('/recipe/new', array('errors' => $errors, 'recipe' => $params));
         }
     }
 

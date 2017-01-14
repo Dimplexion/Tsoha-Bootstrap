@@ -9,6 +9,10 @@ $routes->get('/hiekkalaatikko', function() {
     BasicController::sandbox();
 });
 
+/*
+ * Get routes for recipes.
+ */
+
 $routes->get('/recipe/list', function() {
     RecipeController::index();
 });
@@ -21,10 +25,31 @@ $routes->get('/recipe/new', function() {
     RecipeController::create();
 });
 
-// Show the editing form
+/*
+ * Post routes for recipes.
+ */
+
 $routes->get('/recipe/edit/:id', function($id) {
     RecipeController::edit($id);
 });
+
+$routes->post('/recipe/add', function() {
+    RecipeController::store();
+});
+
+// Update the database
+$routes->post('/recipe/edit/:id', function($id) {
+    RecipeController::update($id);
+});
+
+// Delete the drink recipe
+$routes->post('/recipe/destroy/:id', function($id) {
+    RecipeController::destroy($id);
+});
+
+/*
+ * Get routes for users.
+ */
 
 $routes->get('/user/list', function() {
     UserController::index();
@@ -46,21 +71,9 @@ $routes->get('/user/show/:id', function($id) {
     UserController::show($id);
 });
 
-// Routes for actions.
-
-$routes->post('/recipe/add', function() {
-    RecipeController::store();
-});
-
-// Update the database
-$routes->post('/recipe/edit/:id', function($id) {
-    RecipeController::update($id);
-});
-
-// Delete the drink recipe
-$routes->post('/recipe/destroy/:id', function($id) {
-    RecipeController::destroy($id);
-});
+/*
+ * Post routes for users.
+ */
 
 $routes->post('/user/login', function() {
     UserController::handle_login();

@@ -31,15 +31,17 @@
         <input type="text" class="form-control" name="name" value="{{recipe.name}}">
     </div>
 
-    <div class="form-group">
-        <label>Ainesosa</label>
-        <input type="text" class="form-control" value="">
-    </div>
+    {% for ingredient in ingredients %}
+        <div class="form-group">
+            <label>Ainesosa {{loop.index}}</label>
+            <input type="text" name="ingredients[]" class="form-control" value="{{ingredient[1].name}}">
+        </div>
 
-    <div class="form-group">
-        <label>Ainesosa</label>
-        <input type="text" class="form-control" value="">
-    </div>
+        <div class="form-group">
+            <label>Ainesosa {{loop.index}} määrä (cl)</label>
+            <input type="text" name="ingredient_amounts[]" class="form-control" value="{{ingredient[0]}}">
+        </div>
+    {% endfor %}
 
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Tallenna</button>

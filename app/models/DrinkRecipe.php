@@ -7,7 +7,6 @@ class DrinkRecipe extends BaseModel
     public function __construct($attributes)
     {
         parent::__construct($attributes);
-        // TODO :: Validoi myös maksimipituus etc.
         $this->validators = array('validate_name');
     }
 
@@ -129,9 +128,9 @@ class DrinkRecipe extends BaseModel
         {
             $errors[] = 'Drinkin nimi ei saa olla tyhjä!';
         }
-        if(!BaseModel::validate_string_length($this->name, 3))
+        if(!BaseModel::validate_string_length($this->name, 3, 30))
         {
-            $errors[] = 'Drinkin nimen pituuden tulee olla vähintään kolme merkkiä!';
+            $errors[] = 'Drinkin nimen pituuden tulee olla vähintään kolme ja maksimissaan 30 merkkiä!';
         }
 
         return $errors;

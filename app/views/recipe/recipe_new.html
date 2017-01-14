@@ -12,41 +12,42 @@
 </div>
 {% endif %}
 
+<script src="{{base_path}}/assets/js/add_recipe.js" language="Javascript" type="text/javascript"></script>
+
 <form method="post" action="{{base_path}}/recipe/add">
+
+    {% if user_logged_in.admin %}
+    <div class="form-group">
+        <input type="checkbox" name="approved" value="true">
+        <label>Hyväksy ehdotus suoraan</label>
+    </div>
+    {% endif %}
+
     <div class="form-group">
         <label>Drinkkireseptin nimi</label>
         <input type="text"  name="name" class="form-control" value="{{recipe.name}}">
     </div>
 
-    <div class="form-group">
-        <label>Ainesosa 1</label>
-        <input type="text" name="ingredient1" class="form-control" value="{{recipe.ingredient1}}">
+
+    <div id="ingredient-div">
+
+        {% for ingredient in recipe.ingredients %}
+            <div class="form-group">
+                <label>Ainesosa {{loop.index}}</label>
+                <input type="text" name="ingredients[]" class="form-control" value="{{recipe.ingredients[loop.index0]}}">
+            </div>
+
+            <div class="form-group">
+                <label>Ainesosa {{loop.index}} määrä (cl)</label>
+                <input type="text" name="ingredient_amounts[]" class="form-control" value="{{recipe.ingredient_amounts[loop.index0]}}">
+            </div>
+        {% endfor %}
     </div>
 
     <div class="form-group">
-        <label>Ainesosa 1 määrä (cl)</label>
-        <input type="text" name="ingredient1_amount" class="form-control" value="{{recipe.ingredient1_amount}}">
+        <input type="button" class="btn btn-primary" value="Lisää ainesosa" onClick="addIngredientField('ingredient-div');">
     </div>
-
-    <div class="form-group">
-        <label>Ainesosa 2</label>
-        <input type="text" name="ingredient2" class="form-control" value="{{recipe.ingredient2}}">
-    </div>
-
-    <div class="form-group">
-        <label>Ainesosa 2 määrä (cl)</label>
-        <input type="text" name="ingredient2_amount" class="form-control" value="{{recipe1.ingredient2_amount}}">
-    </div>
-
     <!--
-        TODO :: Add "Approved" check box for admins.
-    -->
-    <div class="form-group">
-        <input type="hidden" name="approved" value=0>
-    </div>
-
-    <!--
-        TODO :: Add dynamic amount of ingredients.
         TODO :: Add description for the drink recipe.
     -->
 

@@ -7,7 +7,7 @@ class DrinkRecipeIngredientComb extends BaseModel
     public function __construct($attributes)
     {
         parent::__construct($attributes);
-        //$this->validators = array('validate_name');
+        $this->validators = array('validate_amount');
     }
 
     public function save()
@@ -21,5 +21,30 @@ class DrinkRecipeIngredientComb extends BaseModel
         $row = $query->fetch();
 
         $this->id = $row['id'];
+    }
+
+    public static function remove_by_recipe_id($recipe_id)
+    {
+        $query = DB::connection()->prepare('DELETE FROM DrinkRecipeIngredientComb WHERE Recipe = :id');
+        $query->execute(array(
+            'id' => $recipe_id,
+        ));
+
+        $query->fetch();
+    }
+
+    public function validate_amount()
+    {
+        $errors = array();
+        if(!is_numeric($this->amount))
+        {
+            $errors[] = 'Ainesosan määrän on oltava numero!';
+        }
+        elseif($this->amount < 0)
+        {
+            $errors[] = 'Ainesosan määrän on oltava epänegatiivinen!';
+        }
+
+        return $errors;
     }
 }
