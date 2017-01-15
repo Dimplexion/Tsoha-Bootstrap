@@ -3,6 +3,8 @@
 
 {% import "macros/forms.html" as forms %}
 
+<script src="{{base_path}}/assets/js/add_recipe.js" language="Javascript" type="text/javascript"></script>
+
 <h1>Muokkaa reseptiä "{{recipe.name}}"</h1>
 
 <p>
@@ -31,17 +33,23 @@
         <input type="text" class="form-control" name="name" value="{{recipe.name}}">
     </div>
 
-    {% for ingredient in ingredients %}
+    <div id="ingredient-div">
+        {% for ingredient in ingredients %}
         <div class="form-group">
             <label>Ainesosa {{loop.index}}</label>
-            <input type="text" name="ingredients[]" class="form-control" value="{{ingredient[1].name}}">
+            <input type="text" name="ingredients[]" class="form-control" value="{{ingredients[loop.index0].name}}">
         </div>
 
         <div class="form-group">
             <label>Ainesosa {{loop.index}} määrä (cl)</label>
-            <input type="text" name="ingredient_amounts[]" class="form-control" value="{{ingredient[0]}}">
+            <input type="text" name="ingredient_amounts[]" class="form-control" value="{{ingredient_amounts[loop.index0]}}">
         </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
+
+    <div class="form-group">
+        <input type="button" class="btn btn-primary" value="Lisää ainesosa" onClick="addIngredientField('ingredient-div');">
+    </div>
 
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Tallenna</button>

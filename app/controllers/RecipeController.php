@@ -27,7 +27,11 @@ class RecipeController extends BaseController
         self::check_logged_in();
 
         $recipe = DrinkRecipe::find($id);
-        /// TODO :: Test that this works.
+        if(!$recipe)
+        {
+            Redirect::to('/recipe/list', array('errors' => array('Reseptiä ei löytynyt!')));
+        }
+
         if(!$recipe->approved)
         {
             self::check_user_owner_or_admin($recipe);
@@ -39,7 +43,8 @@ class RecipeController extends BaseController
                     array(
                         'id' => $id,
                         'recipe' => $recipe,
-                        'ingredients' => $ingredients
+                        'ingredients' => $ingredients[0],
+                        'ingredient_amounts' => $ingredients[1]
                     ));
     }
 
@@ -48,8 +53,10 @@ class RecipeController extends BaseController
         self::check_logged_in();
 
         // By default add two empty ingredients.
-        $recipe = array('ingredients' => array('',''), 'ingredient_amounts'=> array(null, null));
-        View::Make('recipe/recipe_new.html', array('recipe' => $recipe));
+        View::Make('recipe/recipe_new.html', array(
+            'ingredients' => array('',''),
+            'ingredient_amounts'=> array(null, null)
+        ));
     }
 
     public static function store()
@@ -74,7 +81,12 @@ class RecipeController extends BaseController
         $errors = $recipe->errors();
         if(count($errors) > 0)
         {
-            Redirect::to('/recipe/new', array('errors' => $errors, 'recipe' => $params));
+            Redirect::to('/recipe/new', array(
+                'errors' => $errors,
+                'recipe' => $recipe,
+                'ingredients' => $params['ingredients'],
+                'ingredient_amounts' => $params['ingredient_amounts']
+            ));
         }
         $recipe->save();
 
@@ -82,7 +94,12 @@ class RecipeController extends BaseController
         if(count($errors) > 0)
         {
             $recipe->destroy();
-            Redirect::to('/recipe/new', array('errors' => $errors, 'recipe' => $params));
+            Redirect::to('/recipe/new', array(
+                'errors' => $errors,
+                'recipe' => $recipe,
+                'ingredients' => $params['ingredients'],
+                'ingredient_amounts' => $params['ingredient_amounts']
+            ));
         }
 
         Redirect::to('/recipe/show/' . $recipe->id, array('message' => "Drinkkireseptiehdotus lisätty!"));
@@ -93,23 +110,24 @@ class RecipeController extends BaseController
         $errors = array();
         for($i = 0; $i < count($ingredients); $i++)
         {
-            $ingredient = new Ingredient(array(
-                'name' => $ingredients[$i]
-            ));
-
-            $errors = $ingredient->errors();
-            if(count($errors) > 0)
+            $ingredient = Ingredient::find_by_name($ingredients[$i]);
+            if(!$ingredient)
             {
-                break;
+                $ingredient = new Ingredient(array('name' => $ingredients[$i]));
+                $errors = $ingredient->errors();
+                $ingredient->save();
+
+                if(count($errors) > 0)
+                {
+                    break;
+                }
             }
-            $ingredient->save();
 
             $ingredient_comb = new DrinkRecipeIngredientComb( array(
                 'recipe_id' => $recipe->id,
                 'ingredient_id'=> $ingredient->id,
                 'amount' => $ingredient_amounts[$i]
             ));
-
 
             $errors = $ingredient_comb->errors();
             if(count($errors) > 0)
@@ -129,10 +147,13 @@ class RecipeController extends BaseController
         $recipe = DrinkRecipe::find($id);
         self::check_user_owner_or_admin($recipe);
 
-        $ingredients = Ingredient::find_by_recipe_id($recipe->id);
+        $ingredients_and_amounts = Ingredient::find_by_recipe_id($recipe->id);;
+        $ingredients = $ingredients_and_amounts[0];
+        $ingredient_amounts = $ingredients_and_amounts[1];
         View::Make('recipe/recipe_edit.html', array(
             'recipe' => $recipe,
-            'ingredients' => $ingredients
+            'ingredients' => $ingredients,
+            'ingredient_amounts' => $ingredient_amounts
         ));
     }
 

@@ -72,18 +72,18 @@ class Ingredient extends BaseModel
         }
 
         $ingredients = array();
+        $ingredient_amounts = array();
         foreach ($rows as $row)
         {
-            $ingredients[] = array(
-                $row['amount'],
-                new Ingredient(array(
+            $ingredients[] = new Ingredient(array(
                     'id' => $row['id'],
                     'name' => $row['name']
-                ))
-            );
+            ));
+
+            $ingredient_amounts[] = $row['amount'];
         }
 
-        return $ingredients;
+        return array($ingredients, $ingredient_amounts);
     }
 
     public function update()

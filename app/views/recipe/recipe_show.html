@@ -25,7 +25,7 @@
 <h2>Ainesosat:</h2>
 <ul>
     {% for ingredient in ingredients %}
-        <li><strong>{{ingredient[1].name}}</strong> {{ingredient[0]}} cl</li>
+        <li><strong>{{ingredient.name}}</strong> {{ingredient_amounts[loop.index0]}} cl</li>
     {% endfor %}
 </ul>
 

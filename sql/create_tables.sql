@@ -10,7 +10,8 @@ CREATE TABLE DrinkRecipe(
   ID SERIAL PRIMARY KEY,
   Name varchar(120) NOT NULL,
   Owner_ID INTEGER REFERENCES UserAccount(ID),
-  Approved boolean DEFAULT FALSE
+  Approved boolean DEFAULT FALSE,
+  Description TEXT
 );
 
 CREATE TABLE Ingredient(

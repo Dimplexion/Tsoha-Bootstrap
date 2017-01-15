@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+
+<script src="{{base_path}}/assets/js/add_recipe.js" language="Javascript" type="text/javascript"></script>
+
 <h1>Lisää drinkkireseptiehdotus</h1>
 
 {% if errors %}
@@ -11,8 +14,6 @@
     </ul>
 </div>
 {% endif %}
-
-<script src="{{base_path}}/assets/js/add_recipe.js" language="Javascript" type="text/javascript"></script>
 
 <form method="post" action="{{base_path}}/recipe/add">
 
@@ -28,18 +29,16 @@
         <input type="text"  name="name" class="form-control" value="{{recipe.name}}">
     </div>
 
-
     <div id="ingredient-div">
-
-        {% for ingredient in recipe.ingredients %}
+        {% for ingredient in ingredients %}
             <div class="form-group">
                 <label>Ainesosa {{loop.index}}</label>
-                <input type="text" name="ingredients[]" class="form-control" value="{{recipe.ingredients[loop.index0]}}">
+                <input type="text" name="ingredients[]" class="form-control" value="{{ingredients[loop.index0]}}">
             </div>
 
             <div class="form-group">
                 <label>Ainesosa {{loop.index}} määrä (cl)</label>
-                <input type="text" name="ingredient_amounts[]" class="form-control" value="{{recipe.ingredient_amounts[loop.index0]}}">
+                <input type="text" name="ingredient_amounts[]" class="form-control" value="{{ingredient_amounts[loop.index0]}}">
             </div>
         {% endfor %}
     </div>
