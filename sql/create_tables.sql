@@ -23,5 +23,5 @@ CREATE TABLE DrinkRecipeIngredientComb(
   ID SERIAL PRIMARY KEY,
   Recipe INTEGER REFERENCES DrinkRecipe(ID) ON DELETE CASCADE,
   Ingredient INTEGER REFERENCES Ingredient(ID) ON DELETE CASCADE,
-  Amount INTEGER NOT NULL -- Maybe should be moved?
+  Amount REAL NOT NULL
 );

@@ -1,5 +1,6 @@
 INSERT INTO UserAccount (Username, Password, Admin) VALUES ('Janne', 'passu123', true);
 INSERT INTO UserAccount (Username, Password, Admin) VALUES ('Henkka', '12345678', false);
+INSERT INTO UserAccount (Username, Password, Admin) VALUES ('Jasmina', 'jasmina', false);
 
 INSERT INTO Ingredient (Name) VALUES ('Rommi');
 INSERT INTO Ingredient (Name) VALUES ('Kola');
