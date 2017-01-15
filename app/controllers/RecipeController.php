@@ -6,7 +6,15 @@ class RecipeController extends BaseController
     {
         self::check_logged_in();
 
-        $recipe_suggestions = DrinkRecipe::all_suggestions_for_user();
+        if(self::is_user_admin())
+        {
+            $recipe_suggestions = DrinkRecipe::all_suggestions();
+        }
+        else
+        {
+            $recipe_suggestions = DrinkRecipe::all_suggestions_for_user(self::get_user_logged_in()->id);
+        }
+
         $recipes = DrinkRecipe::all_approved();
         View::make('recipe/recipe_list.html', array(
             'recipes' => $recipes,
@@ -71,7 +79,7 @@ class RecipeController extends BaseController
         $recipe->save();
 
         $errors = self::add_ingredients($recipe, $params['ingredients'], $params['ingredient_amounts']);
-        if($errors != null)
+        if(count($errors) > 0)
         {
             $recipe->destroy();
             Redirect::to('/recipe/new', array('errors' => $errors, 'recipe' => $params));
@@ -82,6 +90,7 @@ class RecipeController extends BaseController
 
     public static function add_ingredients($recipe, $ingredients, $ingredient_amounts)
     {
+        $errors = array();
         for($i = 0; $i < count($ingredients); $i++)
         {
             $ingredient = new Ingredient(array(
@@ -91,7 +100,7 @@ class RecipeController extends BaseController
             $errors = $ingredient->errors();
             if(count($errors) > 0)
             {
-                return $errors;
+                break;
             }
             $ingredient->save();
 
@@ -105,12 +114,12 @@ class RecipeController extends BaseController
             $errors = $ingredient_comb->errors();
             if(count($errors) > 0)
             {
-                return $errors;
+                break;
             }
             $ingredient_comb->save();
         }
 
-        return null;
+        return $errors;
     }
 
     public static function edit($id)
@@ -137,8 +146,7 @@ class RecipeController extends BaseController
         $params = $_POST;
 
         $approved = 'false';
-        if(isset($params['approved']) &&
-            $params['approved'] === 'true')
+        if(isset($params['approved']) && $params['approved'] === 'true' && self::is_user_admin())
         {
             $approved = 'true';
         }
@@ -152,38 +160,59 @@ class RecipeController extends BaseController
 
         $recipe = new DrinkRecipe($attributes);
         $errors = $recipe->errors();
+        self::check_errors_update($errors, $id, $attributes);
+        $recipe->update();
 
         DrinkRecipeIngredientComb::remove_by_recipe_id($recipe->id);
 
-        foreach($params['ingredients'] as $index=>$ingredient_name)
+        $errors = self::create_ingredients($recipe, $params['ingredients'], $params['ingredient_amounts']);
+        self::check_errors_update($errors, $id, $attributes);
+
+        Redirect::to('/recipe/show/' . $recipe->id, array('message' => 'Drinkkireseptiä on muokattu onnistuneesti!'));
+    }
+
+    public static function check_errors_update($errors, $id, $attributes)
+    {
+        if(count($errors) > 0)
+        {
+            Redirect::to('/recipe/edit/' . $id, array('errors' => $errors, 'attributes' => $attributes));
+        }
+    }
+
+    public static function create_ingredients($recipe, $ingredients, $ingredient_amounts)
+    {
+        $errors = array();
+        foreach($ingredients as $index=>$ingredient_name)
         {
             $ingredient = Ingredient::find_by_name($ingredient_name);
             if($ingredient === null)
             {
                 $ingredient = new Ingredient(array('name' => $ingredient_name));
 
-                /// TODO :: Handle errors. (Refactor into separate function?)
+                $errors = $ingredient->errors();
+                if(count($errors) > 0)
+                {
+                    break;
+                }
+
                 $ingredient->save();
             }
 
             $comb = new DrinkRecipeIngredientComb(array(
                 'recipe_id' => $recipe->id,
                 'ingredient_id' => $ingredient->id,
-                'amount' => $params['ingredient_amounts'][$index]
+                'amount' => $ingredient_amounts[$index]
             ));
-            /// TODO :: Handle errors.
+
+            $errors = $comb->errors();
+            if(count($errors) > 0)
+            {
+                break;
+            }
             $comb->save();
         }
 
-        if(count($errors) == 0)
-        {
-            $recipe->update();
-            Redirect::to('/recipe/show/' . $recipe->id, array('message' => 'Drinkkireseptiä on muokattu onnistuneesti!'));
-        }
-        else
-        {
-            Redirect::to('/recipe/edit/' . $id, array('errors' => $errors, 'attributes' => $attributes));
-        }
+        return $errors;
     }
 
     public static function destroy($id)

@@ -20,16 +20,15 @@ class DrinkRecipe extends BaseModel
         return DrinkRecipe::query_list('SELECT * FROM DrinkRecipe WHERE Approved = TRUE');
     }
 
-    public static function all_suggestions_for_user()
+    public static function all_suggestions()
     {
-        $user = BaseController::get_user_logged_in();
-        if($user)
-        {
-            $args = array('owner_id' => $user->id);
-            return DrinkRecipe::query_list('SELECT * FROM DrinkRecipe WHERE owner_id = :owner_id AND Approved = FALSE', $args);
-        }
+        return DrinkRecipe::query_list('SELECT * FROM DrinkRecipe WHERE Approved = FALSE');
+    }
 
-        return null;
+    public static function all_suggestions_for_user($user_id)
+    {
+        $args = array('owner_id' => $user_id);
+        return DrinkRecipe::query_list('SELECT * FROM DrinkRecipe WHERE owner_id = :owner_id AND Approved = FALSE', $args);
     }
 
     public static function all_approved_for_user()
