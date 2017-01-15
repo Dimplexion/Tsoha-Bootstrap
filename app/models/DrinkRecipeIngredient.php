@@ -1,6 +1,6 @@
 <?php
 
-class DrinkRecipeIngredientComb extends BaseModel
+class DrinkRecipeIngredient extends BaseModel
 {
     public $id, $recipe_id, $ingredient_id, $amount;
 
@@ -12,7 +12,7 @@ class DrinkRecipeIngredientComb extends BaseModel
 
     public function save()
     {
-        $query = DB::connection()->prepare('INSERT INTO DrinkRecipeIngredientComb (Recipe, Ingredient, Amount) VALUES (:recipe_id, :ingredient_id, :amount) RETURNING id');
+        $query = DB::connection()->prepare('INSERT INTO DrinkRecipeIngredient (Recipe, Ingredient, Amount) VALUES (:recipe_id, :ingredient_id, :amount) RETURNING id');
         $query->execute(array(
             'recipe_id' => $this->recipe_id,
             'ingredient_id' => $this->ingredient_id,
@@ -25,7 +25,7 @@ class DrinkRecipeIngredientComb extends BaseModel
 
     public static function remove_by_recipe_id($recipe_id)
     {
-        $query = DB::connection()->prepare('DELETE FROM DrinkRecipeIngredientComb WHERE Recipe = :id');
+        $query = DB::connection()->prepare('DELETE FROM DrinkRecipeIngredient WHERE Recipe = :id');
         $query->execute(array(
             'id' => $recipe_id,
         ));

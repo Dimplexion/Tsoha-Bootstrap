@@ -19,7 +19,7 @@ CREATE TABLE Ingredient(
   Name varchar(120) NOT NULL UNIQUE
 );
 
-CREATE TABLE DrinkRecipeIngredientComb(
+CREATE TABLE DrinkRecipeIngredient(
   ID SERIAL PRIMARY KEY,
   Recipe INTEGER REFERENCES DrinkRecipe(ID) ON DELETE CASCADE,
   Ingredient INTEGER REFERENCES Ingredient(ID) ON DELETE CASCADE,

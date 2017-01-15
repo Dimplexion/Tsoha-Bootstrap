@@ -124,7 +124,7 @@ class RecipeController extends BaseController
                 }
             }
 
-            $ingredient_comb = new DrinkRecipeIngredientComb( array(
+            $ingredient_comb = new DrinkRecipeIngredient( array(
                 'recipe_id' => $recipe->id,
                 'ingredient_id'=> $ingredient->id,
                 'amount' => $ingredient_amounts[$i]
@@ -186,7 +186,7 @@ class RecipeController extends BaseController
         self::check_errors_update($errors, $id, $attributes);
         $recipe->update();
 
-        DrinkRecipeIngredientComb::remove_by_recipe_id($recipe->id);
+        DrinkRecipeIngredient::remove_by_recipe_id($recipe->id);
 
         $errors = self::create_ingredients($recipe, $params['ingredients'], $params['ingredient_amounts']);
         self::check_errors_update($errors, $id, $attributes);
@@ -221,7 +221,7 @@ class RecipeController extends BaseController
                 $ingredient->save();
             }
 
-            $comb = new DrinkRecipeIngredientComb(array(
+            $comb = new DrinkRecipeIngredient(array(
                 'recipe_id' => $recipe->id,
                 'ingredient_id' => $ingredient->id,
                 'amount' => $ingredient_amounts[$index]

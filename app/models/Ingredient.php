@@ -61,9 +61,9 @@ class Ingredient extends BaseModel
 
     public static function find_by_recipe_id($recipe_id)
     {
-        $query = DB::connection()->prepare('SELECT Ingredient.id, Ingredient.name, DrinkRecipeIngredientComb.amount FROM DrinkRecipeIngredientComb 
-                                              INNER JOIN Ingredient ON DrinkRecipeIngredientComb.Ingredient = Ingredient.ID 
-                                              WHERE DrinkRecipeIngredientComb.Recipe = :recipe_id');
+        $query = DB::connection()->prepare('SELECT Ingredient.id, Ingredient.name, DrinkRecipeIngredient.amount FROM DrinkRecipeIngredient 
+                                              INNER JOIN Ingredient ON DrinkRecipeIngredient.Ingredient = Ingredient.ID 
+                                              WHERE DrinkRecipeIngredient.Recipe = :recipe_id');
         $query->execute(array('recipe_id' => $recipe_id));
         $rows = $query->fetchall();
 
