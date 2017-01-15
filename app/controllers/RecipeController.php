@@ -75,7 +75,8 @@ class RecipeController extends BaseController
         $recipe = new DrinkRecipe(array(
             'name' => $params['name'],
             'owner_id' => self::get_user_logged_in()->id,
-            'approved' => $approved
+            'approved' => $approved,
+            'description' => $params['description']
         ));
 
         $errors = $recipe->errors();
@@ -176,7 +177,8 @@ class RecipeController extends BaseController
             'id' => $id,
             'name' => $params['name'],
             'owner_id' => $recipe->owner_id,
-            'approved' => $approved
+            'approved' => $approved,
+            'description' => $params['description']
         );
 
         $recipe = new DrinkRecipe($attributes);

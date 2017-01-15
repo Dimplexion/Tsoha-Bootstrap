@@ -2,7 +2,7 @@
 
 class DrinkRecipe extends BaseModel
 {
-    public $id, $name, $owner_id, $approved;
+    public $id, $name, $owner_id, $approved, $description;
 
     public function __construct($attributes)
     {
@@ -58,31 +58,33 @@ class DrinkRecipe extends BaseModel
             'id' => $row['id'],
             'name' => $row['name'],
             'owner_id' => $row['owner_id'],
-            'approved' => $row['approved']
+            'approved' => $row['approved'],
+            'description' => $row['description']
         ));
     }
 
     public function update()
     {
-        $query = DB::connection()->prepare('UPDATE DrinkRecipe SET Name = :name, Owner_ID = :owner_id, Approved = :approved WHERE ID = :id RETURNING id');
+        $query = DB::connection()->prepare('UPDATE DrinkRecipe SET Name = :name, Owner_ID = :owner_id, Approved = :approved, Description = :description WHERE ID = :id RETURNING id');
         $query->execute(array(
             'name' => $this->name,
             'owner_id' => $this->owner_id,
             'approved' => $this->approved,
+            'description' => $this->description,
             'id' => $this->id
         ));
 
-        /// TODO :: How to check something was updated?
         $query->fetch();
     }
 
     public function save()
     {
-        $query = DB::connection()->prepare('INSERT INTO DrinkRecipe (Name, Owner_ID, Approved) VALUES (:name, :owner_id, :approved) RETURNING id');
+        $query = DB::connection()->prepare('INSERT INTO DrinkRecipe (Name, Owner_ID, Approved, Description) VALUES (:name, :owner_id, :approved, :description) RETURNING id');
         $query->execute(array(
             'name' => $this->name,
             'owner_id' => $this->owner_id,
-            'approved' => $this->approved
+            'approved' => $this->approved,
+            'description' => $this->description
         ));
         $row = $query->fetch();
 
